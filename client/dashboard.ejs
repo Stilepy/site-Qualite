@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Dashboard - QualiteApps</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --roxo-vivo: #8A2BE2;
+            --azul-tech: #00B4D8;
+            --verde-fresh: #00C853;
+            --preto-profundo: #121212;
+            --cinza-claro: #f5f5f5;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--preto-profundo);
+            color: white;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--roxo-vivo);
+        }
+
+        .user-info h2 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .user-info p {
+            margin: 5px 0 0;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .premium-badge {
+            background: linear-gradient(45deg, var(--roxo-vivo), #9B30FF);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 30px;
+        }
+
+        .sidebar {
+            background: rgba(30, 30, 30, 0.7);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            height: fit-content;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 10px;
+        }
+
+        .sidebar-menu a {
+            display: block;
+            padding: 12px 15px;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background: rgba(138, 43, 226, 0.2);
+            color: white;
+        }
+
+        .sidebar-menu i {
+            width: 25px;
+            text-align: center;
+            margin-right: 10px;
+        }
+
+        .main-content {
+            background: rgba(30, 30, 30, 0.7);
+            border-radius: 15px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            margin-top: 0;
+            margin-bottom: 25px;
+            color: var(--azul-tech);
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .plan-card {
+            background: rgba(40, 40, 40, 0.7);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-left: 5px solid var(--roxo-vivo);
+        }
+
+        .plan-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .plan-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 0;
+            color: var(--roxo-vivo);
+        }
+
+        .plan-status {
+            background: var(--verde-fresh);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .plan-expiry {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 15px;
+        }
+
+        .servers-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .server-card {
+            background: rgba(50, 50, 50, 0.7);
+            border-radius: 10px;
+            padding: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s;
+        }
+
+        .server-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--azul-tech);
+        }
+
+        .server-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .server-name {
+            font-weight: 600;
+            margin: 5px 0;
+        }
+
+        .server-id {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.6);
+            font-family: monospace;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: var(--roxo-vivo);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .payment-history {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .payment-history th, .payment-history td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .payment-history th {
+            color: var(--azul-tech);
+            font-weight: 600;
+        }
+
+        .payment-status {
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .status-approved {
+            background: rgba(0, 200, 83, 0.2);
+            color: var(--verde-fresh);
+        }
+
+        .status-pending {
+            background: rgba(0, 180, 216, 0.2);
+            color: var(--azul-tech);
+        }
+
+        .status-rejected {
+            background: rgba(231, 76, 60, 0.2);
+            color: #e74c3c;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                order: 2;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="dashboard-header">
+            <div class="user-profile">
+                <img src="/assets/default-avatar.png" alt="Avatar" class="user-avatar" id="user-avatar">
+                <div class="user-info">
+                    <h2 id="username">Carregando...</h2>
+                    <p id="user-email">user@example.com</p>
+                </div>
+            </div>
+            <div class="premium-badge" id="premium-badge">
+                <i class="fas fa-crown"></i> PREMIUM
+            </div>
+        </div>
+        
+        <div class="dashboard-grid">
+            <div class="sidebar">
+                <ul class="sidebar-menu">
+                    <li><a href="#" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="#"><i class="fas fa-cog"></i> Configurações</a></li>
+                    <li><a href="#"><i class="fas fa-credit-card"></i> Assinatura</a></li>
+                    <li><a href="#"><i class="fas fa-history"></i> Histórico</a></li>
+                    <li><a href="#"><i class="fas fa-question-circle"></i> Suporte</a></li>
+                    <li><a href="/auth/logout"><i class="fas fa-sign-out-alt"></i> Sair</a></li>
+                </ul>
+            </div>
+            
+            <div class="main-content">
+                <h2 class="section-title">Minha Assinatura</h2>
+                
+                <div class="plan-card">
+                    <div class="plan-header">
+                        <h3 class="plan-name" id="current-plan">Epro Completo</h3>
+                        <span class="plan-status" id="plan-status">Ativo</span>
+                    </div>
+                    <p class="plan-expiry" id="plan-expiry">Expira em: 30/12/2023</p>
+                    
+                    <h4>Servidores Ativos:</h4>
+                    <div class="servers-list" id="servers-list">
+                        <div class="server-card">
+                            <div class="server-icon">
+                                <i class="fas fa-server"></i>
+                            </div>
+                            <h4 class="server-name">Meu Servidor</h4>
+                            <p class="server-id">ID: 123456789</p>
+                            <a href="#" class="btn btn-secondary">
+                                <i class="fas fa-cog"></i> Configurar
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <a href="/plans" class="btn btn-primary" style="margin-top: 20px;">
+                        <i class="fas fa-sync-alt"></i> Gerenciar Assinatura
+                    </a>
+                </div>
+                
+                <h2 class="section-title" style="margin-top: 40px;">Histórico de Pagamentos</h2>
+                
+                <table class="payment-history">
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Plano</th>
+                            <th>Valor</th>
+                            <th>Método</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="payments-table">
+                        <tr>
+                            <td>15/11/2023</td>
+                            <td>Epro Completo</td>
+                            <td>R$ 6,99</td>
+                            <td>Cartão</td>
+                            <td><span class="payment-status status-approved">Aprovado</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Carregar dados do usuário
+            await loadUserData();
+            
+            // Carregar dados da assinatura
+            await loadSubscriptionData();
+            
+            // Carregar histórico de pagamentos
+            await loadPaymentHistory();
+        });
+        
+        async function loadUserData() {
+            try {
+                const response = await fetch('/api/users/me');
+                if (!response.ok) throw new Error('Erro ao carregar dados do usuário');
+                
+                const user = await response.json();
+                
+                // Atualizar UI
+                document.getElementById('username').textContent = user.username;
+                
+                if (user.avatar) {
+                    document.getElementById('user-avatar').src = user.avatar;
+                }
+                
+                if (user.email) {
+                    document.getElementById('user-email').textContent = user.email;
+                }
+                
+                // Atualizar status premium
+                const premiumBadge = document.getElementById('premium-badge');
+                if (user.premium?.isActive) {
+                    premiumBadge.style.display = 'block';
+                } else {
+                    premiumBadge.style.display = 'none';
+                }
+                
+            } catch (error) {
+                console.error('Erro ao carregar usuário:', error);
+            }
+        }
+        
+        async function loadSubscriptionData() {
+            try {
+                const response = await fetch('/api/users/me');
+                if (!response.ok) throw new Error('Erro ao carregar assinatura');
+                
+                const user = await response.json();
+                
+                if (user.premium?.isActive) {
+                    document.getElementById('current-plan').textContent = 
+                        user.premium.plan === 'basic' ? 'Bot de Atendimento' : 'Epro Completo';
+                    
+                    document.getElementById('plan-status').textContent = 'Ativo';
+                    document.getElementById('plan-status').className = 'plan-status';
+                    
+                    // Format data de expiração
+                    if (user.premium.expiresAt) {
+                        const expiryDate = new Date(user.premium.expiresAt);
+                        document.getElementById('plan-expiry').textContent = 
+                            `Expira em: ${expiryDate.toLocaleDateString('pt-BR')}`;
+                    }
+                    
+                    // Atualizar servidores
+                    const serversList = document.getElementById('servers-list');
+                    serversList.innerHTML = '';
+                    
+                    if (user.premium.servers && user.premium.servers.length > 0) {
+                        user.premium.servers.forEach(server => {
+                            const serverCard = document.createElement('div');
+                            serverCard.className = 'server-card';
+                            serverCard.innerHTML = `
+                                <div class="server-icon">
+                                    <i class="fas fa-server"></i>
+                                </div>
+                                <h4 class="server-name">${server.name || 'Servidor Discord'}</h4>
+                                <p class="server-id">ID: ${server.id}</p>
+                                <a href="#" class="btn btn-secondary">
+                                    <i class="fas fa-cog"></i> Configurar
+                                </a>
+                            `;
+                            serversList.appendChild(serverCard);
+                        });
+                    } else {
+                        serversList.innerHTML = '<p>Nenhum servidor ativo</p>';
+                    }
+                } else {
+                    document.getElementById('current-plan').textContent = 'Nenhum plano ativo';
+                    document.getElementById('plan-status').textContent = 'Inativo';
+                    document.getElementById('plan-status').style.background = '#e74c3c';
+                    document.getElementById('plan-expiry').textContent = '';
+                    document.getElementById('servers-list').innerHTML = '<p>Você não tem um plano ativo</p>';
+                }
+                
+            } catch (error) {
+                console.error('Erro ao carregar assinatura:', error);
+            }
+        }
+        
+        async function loadPaymentHistory() {
+            try {
+                const response = await fetch('/api/users/me');
+                if (!response.ok) throw new Error('Erro ao carregar histórico');
+                
+                const user = await response.json();
+                const paymentsTable = document.getElementById('payments-table');
+                paymentsTable.innerHTML = '';
+                
+                if (user.payments && user.payments.length > 0) {
+                    user.payments.forEach(payment => {
+                        const row = document.createElement('tr');
+                        
+                        // Format data
+                        const paymentDate = new Date(payment.createdAt);
+                        const formattedDate = paymentDate.toLocaleDateString('pt-BR');
+                        
+                        // Format plano
+                        const planName = payment.plan === 'basic' 
+                            ? 'Bot de Atendimento' 
+                            : 'Epro Completo';
+                        
+                        // Format valor
+                        const formattedAmount = payment.amount.toFixed(2).replace('.', ',');
+                        
+                        // Format método
+                        const method = payment.method === 'mercadopago' 
+                            ? 'Cartão' 
+                            : 'PIX';
+                        
+                        // Status
+                        let statusClass = '';
+                        let statusText = '';
+                        
+                        switch(payment.status) {
+                            case 'approved':
+                                statusClass = 'status-approved';
+                                statusText = 'Aprovado';
+                                break;
+                            case 'pending':
+                                statusClass = 'status-pending';
+                                statusText = 'Pendente';
+                                break;
+                            case 'rejected':
+                                statusClass = 'status-rejected';
+                                statusText = 'Recusado';
+                                break;
+                            default:
+                                statusClass = 'status-pending';
+                                statusText = payment.status;
+                        }
+                        
+                        row.innerHTML = `
+                            <td>${formattedDate}</td>
+                            <td>${planName}</td>
+                            <td>R$ ${formattedAmount}</td>
+                            <td>${method}</td>
+                            <td><span class="payment-status ${statusClass}">${statusText}</span></td>
+                        `;
+                        
+                        paymentsTable.appendChild(row);
+                    });
+                } else {
+                    paymentsTable.innerHTML = `
+                        <tr>
+                            <td colspan="5" style="text-align: center;">Nenhum pagamento encontrado</td>
+                        </tr>
+                    `;
+                }
+                
+            } catch (error) {
+                console.error('Erro ao carregar histórico:', error);
+                paymentsTable.innerHTML = `
+                    <tr>
+                        <td colspan="5" style="text-align: center;">Erro ao carregar histórico</td>
+                    </tr>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>
